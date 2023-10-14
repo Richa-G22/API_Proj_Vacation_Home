@@ -1,7 +1,7 @@
 # `<Vacation Home>` 
 ## Database Schema Design
 
-`<insert database schema design here>`
+[link to schema](https://dbdiagram.io/d/Vacation-Home-652a8218ffbf5169f0ad5167)
 
 ## API Documentation
 
