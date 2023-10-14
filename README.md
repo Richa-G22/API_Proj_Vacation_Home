@@ -1,7 +1,7 @@
 # `API Vacation Home` 
 ## Database Schema Design
 
-[db-schema](./images/Vacation Home.png)
+[db-schema](./images/Vacation-Home.png)
 
 ## API Documentation
 
