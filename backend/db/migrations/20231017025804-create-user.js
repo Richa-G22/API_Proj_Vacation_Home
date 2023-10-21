@@ -25,7 +25,7 @@ module.exports = {
         unique: true
       },
       firstName: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING, 
       },
       lastName: {
         type: Sequelize.STRING,
