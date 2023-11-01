@@ -57,7 +57,7 @@ router.get("/current", requireAuth, async (req, res) => {
       //          [sequelize.col('SpotImages.url'), 'previewImage'] 
        //     ]
        // },
-        group: ['Review.id']
+        group: ['Review.id', 'User.id']
     });
 
 	return res.json({"Reviews": reviews});
