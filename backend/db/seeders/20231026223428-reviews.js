@@ -29,7 +29,13 @@ module.exports = {
         userId: 3,
         review: 'Best',
         stars: 5,
-      }
+      },
+      {
+        spotId: 1,
+        userId: 1,
+        review: 'Nice',
+        stars: 4,
+      },
     ], { validate: true });
   },
 

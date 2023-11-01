@@ -17,6 +17,16 @@ module.exports = {
         url: 'https://www.pexels.com/photo/house-beside-trees-and-castle-1831545/',
         preview: true,
       },
+    /*  {
+        spotId: 1,
+        url: 'https://www.pexels.com/photo/house-beside-trees-and-castle-1831545/',
+        preview: false,
+      },
+      {
+        spotId: 1,
+        url: 'https://www.pexels.com/photo/house-beside-trees-and-castle-1831545/',
+        preview: true,
+      },*/
       {
         spotId: 2,
         url: 'https://www.pexels.com/photo/brown-and-gray-house-1850609/',
