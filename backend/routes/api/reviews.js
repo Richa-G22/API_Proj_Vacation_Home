@@ -13,6 +13,7 @@ const validateReview = [
       .not()
       .isEmpty()
       .isInt({ min: 1})
+      .withMessage('Stars must be an integer from 1 to 5')
       .isInt({ max: 5})
       .withMessage('Stars must be an integer from 1 to 5'),
     check('review')
@@ -24,10 +25,55 @@ const validateReview = [
 
 // Get all Reviews of the Current User
 router.get("/current", requireAuth, async (req, res) => {
+    const spots = await Spot.findAll({
+        where: {
+            ownerId: req.user.id
+        },
+        include: [
+            {
+                model: SpotImage,
+            }
+        ]
+    })
+    let resultArray = [];
+    let spotList = [];
+    let previewImage;
+    const modifiedSpot = {};
+    const reviewImageList = [];
+    //console.log('@@@@@', spots);
+    spots.forEach(spot => {
+       // console.log('############',spot.toJSON());
+        spotList.push(spot.toJSON());
+    });
+    //console.log('%%%%%%%%%',spotList);
+
+    spotList.forEach(spot => {
+        modifiedSpot.ownerId = spot.ownerId;
+        modifiedSpot.address = spot.address;
+        modifiedSpot.city = spot.city;
+        modifiedSpot.state = spot.state;
+        modifiedSpot.country = spot.country;
+        modifiedSpot.lat = spot.lat;
+        modifiedSpot.lng = spot.lng;
+        modifiedSpot.name = spot.name;
+        modifiedSpot.price = spot.price;
+
+        spot.SpotImages.forEach(image => {
+           // console.log('^^^^^^^^^^',image.url);
+            modifiedSpot.id = spots.id;
+    
+            if (image.preview === true) {
+                previewImage = image.url;
+            }
+        })
+    });
+    //console.log('*******', previewImage);
+    modifiedSpot.previewImage = previewImage;
     
 	const reviews = await Review.findAll({
         where: {
             userId: req.user.id,
+            
         },
         include: [
             {
@@ -36,31 +82,48 @@ router.get("/current", requireAuth, async (req, res) => {
         },
             {
                 model: Spot,
-                attributes: ['id','ownerId','address','city','state','country','lat','lng','name','price'], 
-                include: [
-                    {
-                        model: SpotImage,
-                     //   attributes: [],
-                        attributes: ['url'],
-                        as: 'previewImage'
-                    },
-                ] ,
+                where: {
+                    ownerId : req.user.id,
+                },
+                attributes: []    
             }, 
-       
-        {
-                model: ReviewImage,
-                attributes: ['id','url'],
-        }, 
         ],
-      //  attributes: {
-      //     include: [
-      //          [sequelize.col('SpotImages.url'), 'previewImage'] 
-       //     ]
-       // },
         group: ['Review.id', 'User.id']
     });
 
-	return res.json({"Reviews": reviews});
+    const reviewImages = await ReviewImage.findAll({
+        include :[
+            {
+                model: Review,
+                attributes: [],
+                where: {
+                    userId: req.user.id, 
+                },
+                include: [
+                    {
+                        model: Spot,
+                        where: {
+                            ownerId: req.user.id,
+                        }
+                    }
+                ],
+                group: ['Spot.id'],
+            },
+        ],
+        group: ['ReviewImage.id', 'Review.userId', 'Review.id']
+    });
+    console.log('&&&&&&&&&&&',reviewImages);
+    const modifiedReviewImage = {};
+    reviewImages.forEach(reviewImage => {
+        reviewImageList.push(reviewImage.toJSON());
+    });
+
+    reviewImageList.forEach(reviewImage => {
+        modifiedReviewImage.id = reviewImage.id;
+        modifiedReviewImage.url = reviewImage.url;
+    })
+  //  console.log('!!!!!!!!!', modifiedReviewImage);
+	return res.json({"Reviews": reviews, "Spot": modifiedSpot, "ReviewImages": modifiedReviewImage });
 });
 
 
