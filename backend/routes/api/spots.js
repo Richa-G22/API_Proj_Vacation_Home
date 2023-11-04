@@ -228,7 +228,7 @@ router.get("/", validateQuery, async (req, res) => {
                 price: { [Op.and]: [{[Op.gte]:minPrice}, {[Op.lte]:maxPrice}] },   
             },
             
-            group: ['Spot.id','SpotImages.url']
+            group: ['Spot.id','SpotImages.url', 'SpotImages.preview']
         });
         const spotList = [];
         spots.forEach(spot => {
@@ -270,7 +270,7 @@ router.get("/", validateQuery, async (req, res) => {
                     [sequelize.col('SpotImages.preview'), 'preview'] 
                 ]
             },
-            group: ['Spot.id']
+            group: ['Spot.id','SpotImages.url']
         });
         const spotList = [];
         spots.forEach(spot => {
