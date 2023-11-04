@@ -46,7 +46,7 @@ router.get("/current", requireAuth, async (req, res) => {
                 [Sequelize.col('Spot.SpotImages.url'), 'previewImage'] 
             ]
         }, 
-        group: ['Booking.id','Spot.SpotImages.url']
+        group: ['Booking.id','Spot.SpotImages.url','Spot.id']
     });
 
     bookings.forEach(booking => {
