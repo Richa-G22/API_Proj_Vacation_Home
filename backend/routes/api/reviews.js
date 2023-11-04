@@ -5,7 +5,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth');
-const { Review, Spot, User, ReviewImage, SpotImage, sequelize } = require('../../db/models');
+const { Review, Spot, User, ReviewImage, SpotImage, Sequelize } = require('../../db/models');
 const router = express.Router();
 
 const validateReview = [
@@ -25,46 +25,6 @@ const validateReview = [
 
 // Get all Reviews of the Current User
 router.get("/current", requireAuth, async (req, res) => {
-    const spots = await Spot.findAll({
-        where: {
-            ownerId: req.user.id
-        },
-        include: [
-            {
-                model: SpotImage,
-            }
-        ]
-    })
-    
-    let spotList = [];
-    let previewImage;
-    let modifiedSpot = {};
-    
-    spots.forEach(spot => {    
-        spotList.push(spot.toJSON());
-    });
-    
-    spotList.forEach(spot => {
-        modifiedSpot.ownerId = spot.ownerId;
-        modifiedSpot.address = spot.address;
-        modifiedSpot.city = spot.city;
-        modifiedSpot.state = spot.state;
-        modifiedSpot.country = spot.country;
-        modifiedSpot.lat = spot.lat;
-        modifiedSpot.lng = spot.lng;
-        modifiedSpot.name = spot.name;
-        modifiedSpot.price = spot.price;
-
-        spot.SpotImages.forEach(image => {
-            modifiedSpot.id = spots.id;
-    
-            if (image.preview === true) {
-                previewImage = image.url;
-            }
-        })
-    });
-    
-    modifiedSpot.previewImage = previewImage;
     
 	let reviews = await Review.findAll({
         where: {
@@ -74,33 +34,38 @@ router.get("/current", requireAuth, async (req, res) => {
         include: [
             {
                 model: User,
-                attributes: ['id','firstName','lastName'],
+                attributes: ['id','firstName','lastName'], 
         },
             {
                 model: Spot,
-             /*   where: {
-                    ownerId : req.user.id,
-                },*/
-                attributes: []
-                  
+                attributes: ['id','ownerId','address','city','state','country','lat','lng','name','price'], 
+                include: [
+                    {
+                        model: SpotImage,
+                        attributes: [],
+                    },
+                ]   
             }, 
             {
                 model: ReviewImage,
                 attributes: ['id', 'url']
             },
         ],
+        attributes: {
+            include: [  
+                [Sequelize.col('Spot.SpotImages.url'), 'previewImage'] 
+            ]
+        }, 
         group: ['Review.id', 'User.id', 'ReviewImages.id']
     });
-
     
     let reviewList = [];
     reviews.forEach(review => {
          let review_ = review.toJSON();
-         review_['Spot'] = modifiedSpot;
+         review_['Spot']['previewImage'] = review_.previewImage;
+         delete review_.previewImage;
          reviewList.push(review_);
      });
-        
-    reviews.push(modifiedSpot);
    return res.json({"Reviews": reviewList});
 });
 

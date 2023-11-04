@@ -27,16 +27,16 @@ const validateSpot = [
     check('lat')
       .not()
       .isEmpty()
-      .isFloat()
       .exists({ checkFalsy: true })
       .isNumeric()
+      .isFloat({ min:-90, max:90 })
       .withMessage('Latitude is not valid'),
     check('lng')
       .not()
       .isEmpty()
-      .exists({ checkFalsy: true })
-      .isFloat()
       .isNumeric()
+      .exists({ checkFalsy: true })
+      .isFloat({ min:-180, max:180 })
       .withMessage('Longitude is not valid'),
     check('name')
       .not()
@@ -53,8 +53,8 @@ const validateSpot = [
     check('price')
       .not()
       .isEmpty()
-      .exists({ checkFalsy: true })
-      .isFloat({ min: 0 })  
+     // .exists({ checkFalsy: true })
+      .isInt({ min: 0 })  
       .withMessage('Price per day is required'),
     handleValidationErrors
   ];
@@ -90,19 +90,19 @@ const validateSpot = [
   const validateQuery = [
     check('maxLat')
         .optional()
-        .isFloat()
+        .isFloat({min:-90,max: 90})
         .withMessage("Maximum latitude is invalid"),
     check('minLat')
         .optional()
-        .isFloat()
+        .isFloat({min:-90, max: 90})
         .withMessage("Minimum latitude is invalid"),
     check('minLng')
         .optional()
-        .isFloat()
+        .isFloat({min:-180, max: 180})
         .withMessage("Minimum latitude is invalid"),
     check('maxLng')
         .optional()
-        .isFloat()
+        .isFloat({min:-180, max: 180})
         .withMessage("Maximum latitude is invalid"),
     check('minPrice')
         .optional()
@@ -122,7 +122,6 @@ const validateSpot = [
         include: [
             {
                 model: SpotImage,
-                where : 'preview' === true,
                 attributes: [],   
         }, {
                 model: Review,
@@ -132,58 +131,44 @@ const validateSpot = [
         attributes: {
             include: [
                 [sequelize.fn('AVG', sequelize.col('Reviews.stars')), 'avgRating'],
-                [sequelize.col('SpotImages.url'), 'previewImage'] 
+                [sequelize.col('SpotImages.url'), 'previewImage'],
+                [sequelize.col('SpotImages.preview'), 'preview'] 
             ]
         },
         group: ['Spot.id']
     });
 
-	return res.json({"Spots": spots});
+    const spotList = [];
+    spots.forEach(spot => {
+        let spotJson = spot.toJSON()
+        if (spotJson['avgRating'] === null) {
+            spotJson['avgRating'] = 0
+        } 
+        spotJson['avgRating'] = Number(spotJson['avgRating'].toFixed(2))
+        if ( spotJson['preview'] === 0 || spotJson['preview'] === null ) {
+            spotJson['previewImage'] = "preview false"
+        }
+        if ( spotJson['previewImage'] === null ) {
+            spotJson['previewImage'] = "no image found"
+        }
+        delete spotJson.preview
+        spotList.push(spotJson)
+    });
+
+	return res.json({"Spots": spotList});
 });*/
 
-
-// Get all Spots
+// Get all Spots Pagination
 router.get("/", validateQuery, async (req, res) => {
-    
     console.log('@@@@@@', req.query)
-	const spots = await Spot.findAll({
-        
-        include: [
-            {
-                model: SpotImage,
-                where : 'preview' === true,
-                attributes: [],   
-        }, {
-                model: Review,
-                attributes: [],
-            }
-        ],
-        attributes: {
-            include: [
-                [sequelize.fn('AVG', sequelize.col('Reviews.stars')), 'avgRating'],
-                [sequelize.col('SpotImages.url'), 'previewImage'] 
-            ]
-        },
-        group: ['Spot.id']
-    });
-
     if (req.query.page) {
         let errorResult = { 
             message: "Bad Request",
             errors: {}
         };
-        let { page, size } = req.query;
+        let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
 
         const query = {};
-
-        /*if (!page) page = 1;
-        if (!size) size = 20;
-        if (page > 10) page = 10;
-        if (size > 20) size = 20;
-
-        page = parseInt(page);
-        size = parseInt(size);*/
-
         if (page < 1) {
             errorResult.errors.page = "Page must be greater than or equal to 1"
         };
@@ -192,6 +177,20 @@ router.get("/", validateQuery, async (req, res) => {
             errorResult.errors.size = "Size must be greater than or equal to 1" 
         };
 
+       // if (!page) page = 1;
+       // if (!size) size = 20;
+        if (page > 10) page = 10;
+        if (size > 20) size = 20;
+
+        if (page && !size) {
+            size = 20;
+        } else if (size && !page){
+            page = 1;
+        };
+
+        page = parseInt(page);
+        size = parseInt(size);
+
         if (
             Number.isInteger(page) && Number.isInteger(size) &&
             page > 0 && size > 0 && page <=10 && size <= 20
@@ -199,42 +198,99 @@ router.get("/", validateQuery, async (req, res) => {
             query.limit = size;
             query.offset = size * (page - 1);
         } 
-        /*else if (page < 1) {
-            errorResult.errors.page = "Page must be greater than or equal to 1"
-        } else if (size < 1) {
-            errorResult.errors.size = "Size must be greater than or equal to 1" 
-        };*/
+
+        console.log("** Query **", query)
+
         const spots = await Spot.findAll({
-        
+            limit : query.limit,
+            offset : query.offset,
+            
+            subQuery : false,
             include: [
                 {
                     model: SpotImage,
-                    where : 'preview' === true,
                     attributes: [],   
             }, {
                     model: Review,
                     attributes: [],
                 }
             ],
-            ...query,
             attributes: {
                 include: [
                     [sequelize.fn('AVG', sequelize.col('Reviews.stars')), 'avgRating'],
-                    [sequelize.col('SpotImages.url'), 'previewImage'] 
+                    [sequelize.col('SpotImages.url'), 'previewImage'],
+                    [sequelize.col('SpotImages.preview'), 'preview'] ,
                 ]
             },
-
-            group: ['Spot.id','SpotImages.url'],
+            where: {
+                lat: { [Op.and]: [{[Op.gte]:minLat}, {[Op.lte]:maxLat}] },
+                lng: { [Op.and]: [{[Op.gte]:minLng}, {[Op.lte]:maxLng}] }, 
+                price: { [Op.and]: [{[Op.gte]:minPrice}, {[Op.lte]:maxPrice}] },   
+            },
             
+            group: ['Spot.id','SpotImages.url']
         });
-        return res.json({Spots: spots, page, size })
-    };
-    
-  
-        return res.json({"Spots": spots});
-     	
-});
+        const spotList = [];
+        spots.forEach(spot => {
+            let spotJson = spot.toJSON()
+            if (spotJson['avgRating'] === null) {
+                spotJson['avgRating'] = 0
+            } 
+            spotJson['avgRating'] = Number(spotJson['avgRating'].toFixed(2))
+            if ( spotJson['preview'] === 0 || spotJson['preview'] === null ) {
+                spotJson['previewImage'] = "preview false"
+            }
+            if ( spotJson['previewImage'] === null ) {
+                spotJson['previewImage'] = "no image found"
+            }
+            delete spotJson.preview
+            spotList.push(spotJson)
+        });
 
+        if (errorResult.errors.page || errorResult.errors.size) {
+            return res.status(400).json(errorResult)
+        };
+
+        return res.json({"Spots": spotList,"page":page,"size":size});
+    } else {
+	    const spots = await Spot.findAll({
+            include: [
+                {
+                    model: SpotImage,
+                    attributes: [],   
+            }, {
+                    model: Review,
+                    attributes: [],
+                }
+            ],
+            attributes: {
+                include: [
+                    [sequelize.fn('AVG', sequelize.col('Reviews.stars')), 'avgRating'],
+                    [sequelize.col('SpotImages.url'), 'previewImage'],
+                    [sequelize.col('SpotImages.preview'), 'preview'] 
+                ]
+            },
+            group: ['Spot.id']
+        });
+        const spotList = [];
+        spots.forEach(spot => {
+            let spotJson = spot.toJSON()
+            if (spotJson['avgRating'] === null) {
+                spotJson['avgRating'] = 0
+            } 
+            spotJson['avgRating'] = Number(spotJson['avgRating'].toFixed(2))
+            if ( spotJson['preview'] === 0 || spotJson['preview'] === null ) {
+                spotJson['previewImage'] = "preview false"
+            }
+            if ( spotJson['previewImage'] === null ) {
+                spotJson['previewImage'] = "no image found"
+            }
+            delete spotJson.preview
+            spotList.push(spotJson)
+        });
+	    return res.json({"Spots": spotList});
+    }
+});
 
 // Get all Spots owned by the current logged in user
 router.get("/current", requireAuth, async (req, res) => {
@@ -244,14 +300,14 @@ router.get("/current", requireAuth, async (req, res) => {
             ownerId: req.user.id,
         },
         include: [
-            {
-                model: SpotImage,
-                where : {'preview': true},
-                attributes: [],   
-        }, {
+             {
                 model: Review,
                 attributes: [],
-        }, 
+        }, {
+            model: SpotImage,
+           // where : {'preview': true},
+            attributes: [],   
+        },
         ],
         attributes: {
             include: [
@@ -260,9 +316,37 @@ router.get("/current", requireAuth, async (req, res) => {
             ]
         },
         group: ['Spot.id', 'SpotImages.url']
+        //group: ['Spot.id']
     });
 
-	return res.json({"Spots": spots});
+    const spotList = [];
+    spots.forEach(spot => {
+        let spotJson = spot.toJSON()
+        if (spotJson['avgRating'] === null) {
+            spotJson['avgRating'] = 0
+        } 
+        spotJson['avgRating'] = Number(spotJson['avgRating'].toFixed(2))
+        if ( spotJson['preview'] === 0 || spotJson['preview'] === null ) {
+            spotJson['previewImage'] = "preview false"
+        }
+        if ( spotJson['previewImage'] === null ) {
+            spotJson['previewImage'] = "no image found"
+        }
+        delete spotJson.preview
+        spotList.push(spotJson)
+    //    spotList.push(spot.toJSON());
+    //    spotList.forEach(spot => {
+    //        console.log('----',spotList);
+    //        if (spot['avgRating'] === null) {
+    //            spot['avgRating'] = 0
+    //        } 
+    //        spot['avgRating'] = Number(spot['avgRating'].toFixed(2))
+    //        if ( spot['previewImage'] === null ) {
+    //            spot['previewImage'] = "no image found"
+    //        }
+    //    })
+    });
+	return res.json({"Spots": spotList});
 });
 
 
