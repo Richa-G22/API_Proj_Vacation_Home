@@ -35,18 +35,15 @@ router.get("/current", requireAuth, async (req, res) => {
             }
         ]
     })
-    let resultArray = [];
+    
     let spotList = [];
     let previewImage;
-    const modifiedSpot = {};
-    const reviewImageList = [];
-    //console.log('@@@@@', spots);
-    spots.forEach(spot => {
-       // console.log('############',spot.toJSON());
+    let modifiedSpot = {};
+    
+    spots.forEach(spot => {    
         spotList.push(spot.toJSON());
     });
-    //console.log('%%%%%%%%%',spotList);
-
+    
     spotList.forEach(spot => {
         modifiedSpot.ownerId = spot.ownerId;
         modifiedSpot.address = spot.address;
@@ -59,7 +56,6 @@ router.get("/current", requireAuth, async (req, res) => {
         modifiedSpot.price = spot.price;
 
         spot.SpotImages.forEach(image => {
-           // console.log('^^^^^^^^^^',image.url);
             modifiedSpot.id = spots.id;
     
             if (image.preview === true) {
@@ -67,10 +63,10 @@ router.get("/current", requireAuth, async (req, res) => {
             }
         })
     });
-    //console.log('*******', previewImage);
+    
     modifiedSpot.previewImage = previewImage;
     
-	const reviews = await Review.findAll({
+	let reviews = await Review.findAll({
         where: {
             userId: req.user.id,
             
@@ -82,48 +78,30 @@ router.get("/current", requireAuth, async (req, res) => {
         },
             {
                 model: Spot,
-                where: {
+             /*   where: {
                     ownerId : req.user.id,
-                },
-                attributes: []    
+                },*/
+                attributes: []
+                  
             }, 
-        ],
-        group: ['Review.id', 'User.id']
-    });
-
-    const reviewImages = await ReviewImage.findAll({
-        include :[
             {
-                model: Review,
-                attributes: [],
-                where: {
-                    userId: req.user.id, 
-                },
-                include: [
-                    {
-                        model: Spot,
-                        where: {
-                            ownerId: req.user.id,
-                        }
-                    }
-                ],
-                group: ['Spot.id'],
+                model: ReviewImage,
+                attributes: ['id', 'url']
             },
         ],
-        group: ['ReviewImage.id', 'Review.userId', 'Review.id']
-    });
-    console.log('&&&&&&&&&&&',reviewImages);
-    const modifiedReviewImage = {};
-    reviewImages.forEach(reviewImage => {
-        reviewImageList.push(reviewImage.toJSON());
+        group: ['Review.id', 'User.id', 'ReviewImages.id']
     });
 
-    reviewImageList.forEach(reviewImage => {
-        modifiedReviewImage.id = reviewImage.id;
-        modifiedReviewImage.url = reviewImage.url;
-    })
-  //  console.log('!!!!!!!!!', modifiedReviewImage);
-	return res.json({"Reviews": reviews, "Spot": modifiedSpot, "ReviewImages": modifiedReviewImage });
+    
+    let reviewList = [];
+    reviews.forEach(review => {
+         let review_ = review.toJSON();
+         review_['Spot'] = modifiedSpot;
+         reviewList.push(review_);
+     });
+        
+    reviews.push(modifiedSpot);
+   return res.json({"Reviews": reviewList});
 });
 
 
@@ -145,7 +123,6 @@ router.get("/current", requireAuth, async (req, res) => {
                 include: [
                     {
                         model: SpotImage,
-                     //   attributes: [],
                         attributes: ['url'],
                         as: 'previewImage'
                     },
@@ -157,11 +134,7 @@ router.get("/current", requireAuth, async (req, res) => {
                 attributes: ['id','url'],
         }, 
         ],
-      //  attributes: {
-      //     include: [
-      //          [sequelize.col('SpotImages.url'), 'previewImage'] 
-       //     ]
-       // },
+ 
         group: ['Review.id']
     });
 

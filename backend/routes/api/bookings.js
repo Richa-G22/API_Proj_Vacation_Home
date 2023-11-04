@@ -23,7 +23,8 @@ const validateBooking = [
 
 // Get all of the Current User's Bookings 
 router.get("/current", requireAuth, async (req, res) => {
-    
+    const bookingList = [];
+
 	const bookings = await Booking.findAll({
         where: {
             userId: req.user.id,
@@ -35,23 +36,83 @@ router.get("/current", requireAuth, async (req, res) => {
                 include: [
                     {
                         model: SpotImage,
-                        attributes: ['url'],
-                        as: 'previewImage'
+                        attributes: [],
                     },
                 ] ,
-            }
+            },    
         ],
+        attributes: {
+            include: [  
+                [Sequelize.col('Spot.SpotImages.url'), 'previewImage'] 
+            ]
+        }, 
         group: ['Booking.id']
+    });
+
+    bookings.forEach(booking => {
+        bookingList.push(booking.toJSON());
+    });
+    console.log('@@@@@@@@bookingList',bookingList);
+
+    bookingList.forEach(booking => {
+        booking['previewImage'] = booking.Spot['previewImage']
+    })
+    console.log('@@@@@@@@bookingList',bookingList);
+    let spotList = [];
+    let previewImage;
+    let modifiedSpot = {};
+
+   //bookingList.forEach(booking => {
+        const spots = await Spot.findAll({
+            where: {
+                ownerId: req.user.id
+            },
+            include: [
+                {
+                    model: SpotImage,
+                }
+            ]   
+    });
+
+    spots.forEach(spot => {    
+        spotList.push(spot.toJSON());
+    });
+
+    spotList.forEach(spot => {
+        modifiedSpot.ownerId = spot.ownerId;
+        modifiedSpot.address = spot.address;
+        modifiedSpot.city = spot.city;
+        modifiedSpot.state = spot.state;
+        modifiedSpot.country = spot.country;
+        modifiedSpot.lat = spot.lat;
+        modifiedSpot.lng = spot.lng;
+        modifiedSpot.name = spot.name;
+        modifiedSpot.price = spot.price;
+
+        spot.SpotImages.forEach(image => {
+            modifiedSpot.id = spots.id;
+    
+            if (image.preview === true) {
+                previewImage = image.url;
+            }
+        })
+    });
+    modifiedSpot.previewImage = previewImage;
+
+    bookingList.forEach(booking => {
+        booking['Spot'] = modifiedSpot;
     });
 
 	return res.json({"Bookings": bookings});
 });
+//});
 
 
 //Edit a booking
- router.put("/:bookingId", requireAuth, validateBooking, async (req, res) => {
+ router.put("/:bookingId", requireAuth, async (req, res) => {
    
     const bookingId  = req.params.bookingId;
+
     const booking = await Booking.findByPk(bookingId);
 
     if (!booking) {
@@ -72,24 +133,50 @@ router.get("/current", requireAuth, async (req, res) => {
     const bookingEndDate = new Date(endDate);
     const today = new Date();
 
-    if (bookingEndDate < today){    
-        return res.status(403).json({ message: "Past bookings can't be modified"});
-    };
+    
 
     //Booking conflict
     const dateError = {
         message: "Sorry, this spot is already booked for the specified dates",
         errors: {}
     };
+
+    const sameDatesError = {
+        message: "Bad Request",
+        errors: {}
+    };
+
+    if (Date.parse(bookingStartDate) === Date.parse(bookingEndDate)) {
+        sameDatesError.errors.endDate = "endDate cannot be on or before startDate";
+        return res.status(400).json(sameDatesError)   
+    };
+
+    if (bookingEndDate < bookingStartDate) {
+        sameDatesError.errors.endDate = "endDate cannot come before startDate";
+        return res.status(400).json(sameDatesError) 
+    };
+
     
-    if ((bookingStartDate <= booking.startDate) && (bookingEndDate < booking.endDate)) {
+    
+    if ((bookingStartDate <= booking.startDate) && (bookingEndDate < booking.endDate && bookingEndDate > booking.startDate)) {
         dateError.errors.startDate = "Start date conflicts with an existing booking"
     } else if (( bookingStartDate > booking.startDate) && (bookingEndDate >= booking.endDate)) {
         dateError.errors.endDate = "End date conflicts with an existing booking" 
-        } else if ((bookingStartDate > booking.startDate) && (bookingEndDate < booking.endDate)){
+        } /*else if (((bookingStartDate > booking.startDate) && (bookingEndDate < booking.endDate)) ||
+                   ((bookingStartDate < booking.startDate) && (bookingEndDate > booking.endDate))){
             dateError.errors.startDate = "Start date conflicts with an existing booking",
             dateError.errors.endDate = "End date conflicts with an existing booking" 
-        };
+        };*/
+
+    if (((bookingStartDate === booking.startDate) || (bookingStartDate === booking.endDate))) {
+        dateError.errors.startDate = "Start date conflicts with an existing booking" 
+    } else if (((bookingEndDate === booking.startDate) || (bookingEndDate === booking.endDate))) {
+        dateError.errors.endDate = "End date conflicts with an existing booking" 
+    };
+
+    if (bookingStartDate > booking.endDate){    
+        return res.status(403).json({ message: "Past bookings can't be modified"});
+    };
 
     if (dateError.errors.startDate || dateError.errors.endDate) {
         return res.status(403).json(dateError)
