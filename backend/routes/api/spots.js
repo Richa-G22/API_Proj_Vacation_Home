@@ -161,7 +161,7 @@ const validateSpot = [
 // Get all Spots Pagination
 router.get("/", async (req, res) => {
     console.log('@@@@@@', req.query)
-    if (req.query.page) {
+    if (req.query) {
         let errorResult = { 
             message: "Bad Request",
             errors: {}
@@ -223,6 +223,20 @@ router.get("/", async (req, res) => {
             query.offset = size * (page - 1);
         } 
 
+        let whereClause = {};
+
+        if ( maxLng || maxLat || minLng || minLat || minPrice || maxPrice  ) {
+            if (minLat && maxLat ) {
+                whereClause['lat'] = { [Op.and]: [{[Op.gte]:minLat}, {[Op.lte]:maxLat}] }
+            }
+            if (maxLng && minLng ) {
+                whereClause['lng'] = { [Op.and]: [{[Op.gte]:minLng}, {[Op.lte]:maxLng}] }
+            }
+            if (minPrice && maxPrice) {
+                whereClause['price'] = { [Op.and]: [{[Op.gte]:minPrice}, {[Op.lte]:maxPrice}] }
+            }
+        }
+
         console.log("** Query **", query)
 
         const spots = await Spot.findAll({
@@ -246,12 +260,12 @@ router.get("/", async (req, res) => {
                     [sequelize.col('SpotImages.preview'), 'preview'] ,
                 ]
             },
-            where: {
-                lat: { [Op.and]: [{[Op.gte]:minLat}, {[Op.lte]:maxLat}] },
-                lng: { [Op.and]: [{[Op.gte]:minLng}, {[Op.lte]:maxLng}] }, 
-                price: { [Op.and]: [{[Op.gte]:minPrice}, {[Op.lte]:maxPrice}] },   
-            },
-            
+            //where: {
+            //    lat: { [Op.and]: [{[Op.gte]:minLat}, {[Op.lte]:maxLat}] },
+            //    lng: { [Op.and]: [{[Op.gte]:minLng}, {[Op.lte]:maxLng}] }, 
+            //    price: { [Op.and]: [{[Op.gte]:minPrice}, {[Op.lte]:maxPrice}] },   
+            //},
+            where : whereClause,
             group: ['Spot.id','SpotImages.url', 'SpotImages.preview']
         });
         const spotList = [];
@@ -260,9 +274,18 @@ router.get("/", async (req, res) => {
           //  if (spotJson['avgRating'] === null) {
           //      spotJson['avgRating'] = 0
           //  } 
-        //  if (spotJson['avgRating']) {
-        //    spotJson['avgRating'] = Number(spotJson['avgRating'].toFixed(2))
-        //   };
+            if (spotJson['avgRating']) {
+                spotJson['avgRating'] = parseFloat(spotJson['avgRating'])
+            };
+            if (spotJson['lat']) {
+                spotJson['lat'] = parseFloat(spotJson['lat'])
+            };
+            if (spotJson['lng']) {
+                spotJson['lng'] = parseFloat(spotJson['lng'])
+            };
+            if (spotJson['price']) {
+                spotJson['price'] = parseFloat(spotJson['price'])
+            };
             if ( spotJson['preview'] === 0 || spotJson['preview'] === null ) {
                 spotJson['previewImage'] = "preview false"
             }
@@ -306,9 +329,18 @@ router.get("/", async (req, res) => {
          //   if (spotJson['avgRating'] === null) {
          //       spotJson['avgRating'] = 0
          //   } 
-         //  if (spotJson['avgRating']) {
-         //   spotJson['avgRating'] = Number(spotJson['avgRating'].toFixed(2))
-         //  };
+            if (spotJson['avgRating']) {
+                spotJson['avgRating'] = parseFloat(spotJson['avgRating'])
+            };
+            if (spotJson['lat']) {
+                spotJson['lat'] = parseFloat(spotJson['lat'])
+            };
+            if (spotJson['lng']) {
+                spotJson['lng'] = parseFloat(spotJson['lng'])
+            };
+            if (spotJson['price']) {
+                spotJson['price'] = parseFloat(spotJson['price'])
+            };
             if ( spotJson['preview'] === 0 || spotJson['preview'] === null ) {
                 spotJson['previewImage'] = "preview false"
             }
