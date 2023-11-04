@@ -159,7 +159,7 @@ const validateSpot = [
 });*/
 
 // Get all Spots Pagination
-router.get("/", validateQuery, async (req, res) => {
+router.get("/", async (req, res) => {
     console.log('@@@@@@', req.query)
     if (req.query.page) {
         let errorResult = { 
@@ -175,6 +175,30 @@ router.get("/", validateQuery, async (req, res) => {
 
         if (size < 1) {
             errorResult.errors.size = "Size must be greater than or equal to 1" 
+        };
+
+        if (maxLat && !(maxLat <= 90)) {
+            errorResult.errors.maxLat = "Maximum latitude is invalid" 
+        };
+
+        if (minLat && !(minLat >= -90)) {
+            errorResult.errors.minLat = "Minimum latitude is invalid" 
+        };
+
+        if (maxLng && !(maxLng <= 180)) {
+            errorResult.errors.maxLng = "Maximum longitude is invalid" 
+        };
+
+        if (minLng && !(minLng >= -180)) {
+            errorResult.errors.minLng = "Minimum longitude is invalid" 
+        };
+
+        if (maxPrice && !(maxPrice >= 0)) {
+            errorResult.errors.maxPrice = "Maximum price must be greater than or equal to 0" 
+        };
+
+        if (minPrice && !(minPrice >= 0)) {
+            errorResult.errors.minPrice = "Minimum price must be greater than or equal to 0" 
         };
 
        // if (!page) page = 1;
@@ -233,9 +257,9 @@ router.get("/", validateQuery, async (req, res) => {
         const spotList = [];
         spots.forEach(spot => {
             let spotJson = spot.toJSON()
-            if (spotJson['avgRating'] === null) {
-                spotJson['avgRating'] = 0
-            } 
+          //  if (spotJson['avgRating'] === null) {
+          //      spotJson['avgRating'] = 0
+          //  } 
             spotJson['avgRating'] = Number(spotJson['avgRating'].toFixed(2))
             if ( spotJson['preview'] === 0 || spotJson['preview'] === null ) {
                 spotJson['previewImage'] = "preview false"
@@ -247,7 +271,9 @@ router.get("/", validateQuery, async (req, res) => {
             spotList.push(spotJson)
         });
 
-        if (errorResult.errors.page || errorResult.errors.size) {
+        if (errorResult.errors.page || errorResult.errors.size || errorResult.errors.maxLat 
+            || errorResult.errors.minLat || errorResult.errors.maxLng || errorResult.errors.minLng
+            || errorResult.errors.minPrice || errorResult.errors.maxPrice ) {
             return res.status(400).json(errorResult)
         };
 
@@ -270,14 +296,14 @@ router.get("/", validateQuery, async (req, res) => {
                     [sequelize.col('SpotImages.preview'), 'preview'] 
                 ]
             },
-            group: ['Spot.id','SpotImages.url']
+            group: ['Spot.id','SpotImages.url','SpotImages.preview']
         });
         const spotList = [];
         spots.forEach(spot => {
             let spotJson = spot.toJSON()
-            if (spotJson['avgRating'] === null) {
-                spotJson['avgRating'] = 0
-            } 
+         //   if (spotJson['avgRating'] === null) {
+         //       spotJson['avgRating'] = 0
+         //   } 
             spotJson['avgRating'] = Number(spotJson['avgRating'].toFixed(2))
             if ( spotJson['preview'] === 0 || spotJson['preview'] === null ) {
                 spotJson['previewImage'] = "preview false"
@@ -305,7 +331,6 @@ router.get("/current", requireAuth, async (req, res) => {
                 attributes: [],
         }, {
             model: SpotImage,
-           // where : {'preview': true},
             attributes: [],   
         },
         ],
@@ -316,15 +341,15 @@ router.get("/current", requireAuth, async (req, res) => {
             ]
         },
         group: ['Spot.id', 'SpotImages.url']
-        //group: ['Spot.id']
+        
     });
 
     const spotList = [];
     spots.forEach(spot => {
         let spotJson = spot.toJSON()
-        if (spotJson['avgRating'] === null) {
-            spotJson['avgRating'] = 0
-        } 
+       // if (spotJson['avgRating'] === null) {
+       //     spotJson['avgRating'] = 0
+       // } 
         spotJson['avgRating'] = Number(spotJson['avgRating'].toFixed(2))
         if ( spotJson['preview'] === 0 || spotJson['preview'] === null ) {
             spotJson['previewImage'] = "preview false"
@@ -334,17 +359,7 @@ router.get("/current", requireAuth, async (req, res) => {
         }
         delete spotJson.preview
         spotList.push(spotJson)
-    //    spotList.push(spot.toJSON());
-    //    spotList.forEach(spot => {
-    //        console.log('----',spotList);
-    //        if (spot['avgRating'] === null) {
-    //            spot['avgRating'] = 0
-    //        } 
-    //        spot['avgRating'] = Number(spot['avgRating'].toFixed(2))
-    //        if ( spot['previewImage'] === null ) {
-    //            spot['previewImage'] = "no image found"
-    //        }
-    //    })
+    
     });
 	return res.json({"Spots": spotList});
 });
