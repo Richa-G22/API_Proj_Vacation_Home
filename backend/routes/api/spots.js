@@ -260,9 +260,9 @@ router.get("/", async (req, res) => {
           //  if (spotJson['avgRating'] === null) {
           //      spotJson['avgRating'] = 0
           //  } 
-          if (spotJson['avgRating']) {
-            spotJson['avgRating'] = Number(spotJson['avgRating'].toFixed(2))
-           };
+        //  if (spotJson['avgRating']) {
+        //    spotJson['avgRating'] = Number(spotJson['avgRating'].toFixed(2))
+        //   };
             if ( spotJson['preview'] === 0 || spotJson['preview'] === null ) {
                 spotJson['previewImage'] = "preview false"
             }
@@ -306,9 +306,9 @@ router.get("/", async (req, res) => {
          //   if (spotJson['avgRating'] === null) {
          //       spotJson['avgRating'] = 0
          //   } 
-           if (spotJson['avgRating']) {
-            spotJson['avgRating'] = Number(spotJson['avgRating'].toFixed(2))
-           };
+         //  if (spotJson['avgRating']) {
+         //   spotJson['avgRating'] = Number(spotJson['avgRating'].toFixed(2))
+         //  };
             if ( spotJson['preview'] === 0 || spotJson['preview'] === null ) {
                 spotJson['previewImage'] = "preview false"
             }
@@ -354,9 +354,9 @@ router.get("/current", requireAuth, async (req, res) => {
        // if (spotJson['avgRating'] === null) {
        //     spotJson['avgRating'] = 0
        // } 
-       if (spotJson['avgRating']) {
-        spotJson['avgRating'] = Number(spotJson['avgRating'].toFixed(2))
-       };
+      // if (spotJson['avgRating']) {
+      //  spotJson['avgRating'] = Number(spotJson['avgRating'].toFixed(2))
+      // };
         if ( spotJson['preview'] === 0 || spotJson['preview'] === null ) {
             spotJson['previewImage'] = "preview false"
         }
