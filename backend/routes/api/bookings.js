@@ -55,9 +55,12 @@ router.get("/current", requireAuth, async (req, res) => {
      // console.log('** previewImage ', bookingJson['previewImage'])
         bookingJson['Spot']['previewImage'] = bookingJson['previewImage']
       //console.log('** spot ', bookingJson )
-        bookingJson['Spot']['lat'] = parseFloat(bookingJson['lat'])
-        bookingJson['Spot']['lng'] = parseFloat(bookingJson['lng'])
-        bookingJson['Spot']['price'] = parseFloat(bookingJson['price'])
+        bookingJson['Spot']['lat'] = parseFloat(bookingJson['Spot']['lat'])
+        bookingJson['Spot']['lng'] = parseFloat(bookingJson['Spot']['lng'])
+        bookingJson['Spot']['price'] = parseFloat(bookingJson['Spot']['price'])
+        if (bookingJson['Spot']['previewImage'] === null){
+            bookingJson['Spot']['previewImage'] = "no image found" 
+        }
         delete bookingJson.previewImage;
         bookingList.push(bookingJson);
     });
