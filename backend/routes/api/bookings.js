@@ -86,7 +86,7 @@ router.get("/current", requireAuth, async (req, res) => {
     const { startDate, endDate } = req.body;
     const bookingStartDate = new Date(startDate);
     const bookingEndDate = new Date(endDate);
-    const today = new Date();
+const today = new Date();
 
     //Booking conflict
     const dateError = {

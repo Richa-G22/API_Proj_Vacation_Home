@@ -158,7 +158,7 @@ const validateSpot = [
 	return res.json({"Spots": spotList});
 });*/
 
-// Get all Spots Pagination
+// Get all Spots (Pagination)
 router.get("/", async (req, res) => {
     console.log('@@@@@@', req.query)
     if (req.query) {
@@ -169,6 +169,14 @@ router.get("/", async (req, res) => {
         let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
 
         const query = {};
+        if ( typeof page !== 'number' ){
+            errorResult.errors.page = "Page is invalid" 
+        };
+
+        if ( typeof size !== 'number' ){
+            errorResult.errors.size = "Size is invalid" 
+        };
+
         if (page < 1) {
             errorResult.errors.page = "Page must be greater than or equal to 1"
         };
@@ -177,27 +185,27 @@ router.get("/", async (req, res) => {
             errorResult.errors.size = "Size must be greater than or equal to 1" 
         };
 
-        if (maxLat && !(maxLat <= 90)) {
+        if (maxLat && !(maxLat <= 90) && typeof maxLat !== 'number') {
             errorResult.errors.maxLat = "Maximum latitude is invalid" 
         };
 
-        if (minLat && !(minLat >= -90)) {
+        if (minLat && !(minLat >= -90) && typeof maxLat !== 'number') {
             errorResult.errors.minLat = "Minimum latitude is invalid" 
         };
 
-        if (maxLng && !(maxLng <= 180)) {
+        if (maxLng && !(maxLng <= 180) && typeof maxLat !== 'number') {
             errorResult.errors.maxLng = "Maximum longitude is invalid" 
         };
 
-        if (minLng && !(minLng >= -180)) {
+        if (minLng && !(minLng >= -180) && typeof maxLat !== 'number') {
             errorResult.errors.minLng = "Minimum longitude is invalid" 
         };
 
-        if (maxPrice && !(maxPrice >= 0)) {
+        if (maxPrice && !(maxPrice >= 0) && typeof maxLat !== 'number') {
             errorResult.errors.maxPrice = "Maximum price must be greater than or equal to 0" 
         };
 
-        if (minPrice && !(minPrice >= 0)) {
+        if (minPrice && !(minPrice >= 0) && typeof maxLat !== 'number') {
             errorResult.errors.minPrice = "Minimum price must be greater than or equal to 0" 
         };
 
@@ -386,9 +394,18 @@ router.get("/current", requireAuth, async (req, res) => {
        // if (spotJson['avgRating'] === null) {
        //     spotJson['avgRating'] = 0
        // } 
-      // if (spotJson['avgRating']) {
-      //  spotJson['avgRating'] = Number(spotJson['avgRating'].toFixed(2))
-      // };
+        if (spotJson['avgRating']) {
+            spotJson['avgRating'] = parseFloat(spotJson['avgRating'])
+        };
+        if (spotJson['lat']) {
+            spotJson['lat'] = parseFloat(spotJson['lat'])
+        };
+        if (spotJson['lng']) {
+            spotJson['lng'] = parseFloat(spotJson['lng'])
+        };
+        if (spotJson['price']) {
+            spotJson['price'] = parseFloat(spotJson['price'])
+        };
         if ( spotJson['preview'] === 0 || spotJson['preview'] === null ) {
             spotJson['previewImage'] = "preview false"
         }
@@ -433,6 +450,22 @@ router.get("/:spotId", async (req, res) => {
     });
 
     if (spots) {
+        if (spots['lat']) {
+            spots['lat'] = parseFloat(spots['lat'])
+        };
+        if (spots['lng']) {
+            spots['lng'] = parseFloat(spots['lng'])
+        };
+        if (spots['price']) {
+            spots['price'] = parseFloat(spots['price'])
+        };
+        if (spots['numReviews']) {
+            spots['numReviews'] = parseInt(spots['numReviews'])
+        };
+        if (spots['avgStarRating']) {
+            spots['avgStarRating'] = parseFloat(spots['avgStarRating'])
+        };
+
         return res.json(spots);
     } else {
         const err = new Error("Spot couldn't be found");
@@ -459,8 +492,40 @@ router.post("/",requireAuth, validateSpot, async (req, res) => {
         description,
         price,
     });
+    if ( newSpot ) {
+        if (newSpot['lat']) {
+            newSpot['lat'] = parseFloat(newSpot['lat'])
+        };
+        if (newSpot['lng']) {
+            newSpot['lng'] = parseFloat(newSpot['lng'])
+        };
+        if (newSpot['price']) {
+            newSpot['price'] = parseFloat(newSpot['price'])
+        };
+    }
 	return res.json(newSpot,res.status);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //Add an image to a Spot based on the Spot's id

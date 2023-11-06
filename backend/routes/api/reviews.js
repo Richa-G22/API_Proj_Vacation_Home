@@ -61,10 +61,20 @@ router.get("/current", requireAuth, async (req, res) => {
     
     let reviewList = [];
     reviews.forEach(review => {
-         let review_ = review.toJSON();
-         review_['Spot']['previewImage'] = review_.previewImage;
-         delete review_.previewImage;
-         reviewList.push(review_);
+        let review_ = review.toJSON();
+        if (review_['Spot']['lat']) {
+            review_['Spot']['lat'] = parseFloat(review_['Spot']['lat'])
+        };
+        if (review_['Spot']['lng']) {
+            review_['Spot']['lng'] = parseFloat(review_['Spot']['lng'])
+        };
+        if (review_['Spot']['price']) {
+            review_['Spot']['price'] = parseFloat(review_['Spot']['price'])
+        };
+         
+        review_['Spot']['previewImage'] = review_.previewImage;
+        delete review_.previewImage;
+        reviewList.push(review_);
      });
    return res.json({"Reviews": reviewList});
 });
@@ -105,6 +115,14 @@ router.get("/current", requireAuth, async (req, res) => {
 
 	return res.json({"Reviews": reviews});
 });
+
+
+
+
+
+
+
+
 
 
 // Add an Image to a Review based on the Review's id
