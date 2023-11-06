@@ -161,7 +161,9 @@ const validateSpot = [
 // Get all Spots (Pagination)
 router.get("/", async (req, res) => {
     console.log('@@@@@@', req.query)
-    if (req.query) {
+    if (req.query.page || req.query.size || req.query.minLat || req.query.maxLat || 
+        req.query.minLng || req.query.maxLng || req.query.minPrice || req.query.maxPrice) {
+        console.log('------1------', req.query)
         let errorResult = { 
             message: "Bad Request",
             errors: {}
@@ -169,11 +171,24 @@ router.get("/", async (req, res) => {
         let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
 
         const query = {};
-        if ( typeof page !== 'number' ){
+        if (page && !size) {
+            size = 20;
+        } else if (size && !page){
+            page = 1;
+        };
+
+        if (page > 10) page = 10;
+        if (size > 20) size = 20;
+        page = parseInt(page);
+        size = parseInt(size);
+
+       // if ( typeof page !== 'number' ){
+        if (Number.isNaN(page)){
+            console.log('------3-----', typeof page)
             errorResult.errors.page = "Page is invalid" 
         };
 
-        if ( typeof size !== 'number' ){
+        if (Number.isNaN(size)){
             errorResult.errors.size = "Size is invalid" 
         };
 
@@ -211,17 +226,17 @@ router.get("/", async (req, res) => {
 
        // if (!page) page = 1;
        // if (!size) size = 20;
-        if (page > 10) page = 10;
-        if (size > 20) size = 20;
+       // if (page > 10) page = 10;
+       // if (size > 20) size = 20;
 
-        if (page && !size) {
-            size = 20;
-        } else if (size && !page){
-            page = 1;
-        };
+        //if (page && !size) {
+        //    size = 20;
+        //} else if (size && !page){
+        //    page = 1;
+        //};
 
-        page = parseInt(page);
-        size = parseInt(size);
+        //page = parseInt(page);
+        //size = parseInt(size);
 
         if (
             Number.isInteger(page) && Number.isInteger(size) &&
@@ -229,11 +244,30 @@ router.get("/", async (req, res) => {
         ) {
             query.limit = size;
             query.offset = size * (page - 1);
+           // if (query.offset = 0) query.offset = 1;
         } 
 
         let whereClause = {};
 
         if ( maxLng || maxLat || minLng || minLat || minPrice || maxPrice  ) {
+            if (minLat && !maxLat) {
+                whereClause['lat'] = {[Op.gte]:minLat} 
+            }
+            if (maxLat && !minLat) {
+                whereClause['lng'] = {[Op.lte]:maxLat}  
+            }
+            if (minLng && !maxLng) {
+                whereClause['lng'] = {[Op.gte]:minLng} 
+            }
+            if (maxLng && !minLng) {
+                whereClause['lng'] = {[Op.lte]:maxLng}  
+            }
+            if (minPrice && !maxPrice) {
+                whereClause['price'] = {[Op.gte]:minPrice} 
+            }
+            if (maxPrice && !minPrice) {
+                whereClause['price'] = {[Op.lte]:maxPrice}  
+            }
             if (minLat && maxLat ) {
                 whereClause['lat'] = { [Op.and]: [{[Op.gte]:minLat}, {[Op.lte]:maxLat}] }
             }
@@ -248,8 +282,9 @@ router.get("/", async (req, res) => {
         console.log("** Query **", query)
 
         const spots = await Spot.findAll({
-            limit : query.limit,
-            offset : query.offset,
+           // limit : query.limit,
+           // offset : query.offset,
+            ...query,
             
             subQuery : false,
             include: [
@@ -311,7 +346,10 @@ router.get("/", async (req, res) => {
         };
 
         return res.json({"Spots": spotList,"page":page,"size":size});
-    } else {
+
+    } 
+    else {
+        console.log('------2------', req.query)
 	    const spots = await Spot.findAll({
             include: [
                 {
@@ -507,27 +545,6 @@ router.post("/",requireAuth, validateSpot, async (req, res) => {
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //Add an image to a Spot based on the Spot's id
 router.post("/:spotId/images",requireAuth, async (req, res) => {
     const spotId  = req.params.spotId;
@@ -608,7 +625,7 @@ router.delete('/:spotId', requireAuth, async (req, res, next) => {
         return res.json({ message: "Spot couldn't be found" }, err.status);
     };
 
-    if (parseInt(req.params.spotId) !== parseInt(req.user.id)) {
+    if (parseInt(deleteSpot.ownerId) !== parseInt(req.user.id)) {
         const err = new Error("Forbidden");
         err.status = 403;
         return res.json({ message: "Forbidden" }, err.status); 

@@ -51,14 +51,17 @@ router.get("/current", requireAuth, async (req, res) => {
 
     bookings.forEach(booking => {
         let bookingJson = booking.toJSON();
-        console.log('** booking json', bookingJson);
-        console.log('** previewImage ', bookingJson['previewImage'])
+     // console.log('** booking json', bookingJson);
+     // console.log('** previewImage ', bookingJson['previewImage'])
         bookingJson['Spot']['previewImage'] = bookingJson['previewImage']
-        console.log('** spot ', bookingJson )
+      //console.log('** spot ', bookingJson )
+        bookingJson['Spot']['lat'] = parseFloat(spotJson['lat'])
+        bookingJson['Spot']['lng'] = parseFloat(spotJson['lng'])
+        bookingJson['Spot']['price'] = parseFloat(spotJson['price'])
         delete bookingJson.previewImage;
         bookingList.push(bookingJson);
     });
-    console.log('@@@@@@@@bookingList',bookingList);
+    //console.log('@@@@@@@@bookingList',bookingList);
 
 	return res.json({"Bookings": bookingList});
 });
