@@ -179,8 +179,25 @@ router.get("/", async (req, res) => {
 
         if (page > 10) page = 10;
         if (size > 20) size = 20;
+
+        if (!(page && size) && (minLat || maxLat || minLng || maxLng || minPrice || maxPrice)) {
+            page = 1, size = 20
+        };
+
         page = parseInt(page);
         size = parseInt(size);
+       /* minLat = parseFloat(minLat);
+        maxLat = parseFloat(maxLat);
+        minLng = parseFloat(minLng);
+        maxLng = parseFloat(maxLng);
+        minPrice = parseFloat(minPrice);
+        maxPrice = parseFloat(maxPrice); */
+        console.log('--------1-------',minLat, typeof(minLat));
+        console.log('--------2-------',maxLat,typeof(maxLat));
+        console.log('--------3-------',minLng,typeof(minLng));
+        console.log('--------4-------',maxLng,typeof(maxLng));
+        console.log('--------5-------',minPrice,typeof(minPrice));
+        console.log('--------6-------',maxPrice,typeof(maxPrice));
 
        // if ( typeof page !== 'number' ){
         if (Number.isNaN(page)){
@@ -200,27 +217,33 @@ router.get("/", async (req, res) => {
             errorResult.errors.size = "Size must be greater than or equal to 1" 
         };
 
-        if (maxLat && !(maxLat <= 90) && typeof maxLat !== 'number') {
+        if (maxLat &&  maxLat === 'NaN') {
+            console.log('--------------------')
+            errorResult.errors.maxLat = "Maximum latitude is invalid"  
+        };
+
+        if (maxLat && ((!(maxLat <= 90)) ||  Number.isNaN(maxLat) )) {
             errorResult.errors.maxLat = "Maximum latitude is invalid" 
         };
 
-        if (minLat && !(minLat >= -90) && typeof maxLat !== 'number') {
+        if ((minLat && Number.isNaN(minLat)) || (minLat && !(minLat >= -90)))  {
+            console.log("** invalid minumum latitude **")
             errorResult.errors.minLat = "Minimum latitude is invalid" 
         };
 
-        if (maxLng && !(maxLng <= 180) && typeof maxLat !== 'number') {
+        if ((maxLng && !(maxLng <= 180)) ||  (maxLng && Number.isNaN(maxLng))) {
             errorResult.errors.maxLng = "Maximum longitude is invalid" 
         };
 
-        if (minLng && !(minLng >= -180) && typeof maxLat !== 'number') {
+        if ((minLng && !(minLng >= -180)) ||  (minLng && Number.isNaN(minLng))) {
             errorResult.errors.minLng = "Minimum longitude is invalid" 
         };
 
-        if (maxPrice && !(maxPrice >= 0) && typeof maxLat !== 'number') {
+        if ((maxPrice && !(maxPrice >= 0)) ||  (maxPrice && Number.isNaN(maxPrice))) {
             errorResult.errors.maxPrice = "Maximum price must be greater than or equal to 0" 
         };
 
-        if (minPrice && !(minPrice >= 0) && typeof maxLat !== 'number') {
+        if ((minPrice && !(minPrice >= 0)) ||  (minPrice && Number.isNaN(minPrice))) {
             errorResult.errors.minPrice = "Minimum price must be greater than or equal to 0" 
         };
 
@@ -238,6 +261,12 @@ router.get("/", async (req, res) => {
         //page = parseInt(page);
         //size = parseInt(size);
 
+        if (errorResult.errors.page || errorResult.errors.size || errorResult.errors.maxLat 
+            || errorResult.errors.minLat || errorResult.errors.maxLng || errorResult.errors.minLng
+            || errorResult.errors.minPrice || errorResult.errors.maxPrice ) {
+            return res.status(400).json(errorResult)
+        };
+
         if (
             Number.isInteger(page) && Number.isInteger(size) &&
             page > 0 && size > 0 && page <=10 && size <= 20
@@ -245,7 +274,21 @@ router.get("/", async (req, res) => {
             query.limit = size;
             query.offset = size * (page - 1);
            // if (query.offset = 0) query.offset = 1;
-        } 
+        };
+        
+        minLat = parseFloat(minLat);
+        maxLat = parseFloat(maxLat);
+        minLng = parseFloat(minLng);
+        maxLng = parseFloat(maxLng);
+        minPrice = parseFloat(minPrice);
+        maxPrice = parseFloat(maxPrice);
+
+        console.log('--------1-------',minLat, typeof(minLat));
+        console.log('--------2-------',maxLat,typeof(maxLat));
+        console.log('--------3-------',minLng,typeof(minLng));
+        console.log('--------4-------',maxLng,typeof(maxLng));
+        console.log('--------5-------',minPrice,typeof(minPrice));
+        console.log('--------6-------',maxPrice,typeof(maxPrice));
 
         let whereClause = {};
 
@@ -254,7 +297,7 @@ router.get("/", async (req, res) => {
                 whereClause['lat'] = {[Op.gte]:minLat} 
             }
             if (maxLat && !minLat) {
-                whereClause['lng'] = {[Op.lte]:maxLat}  
+                whereClause['lat'] = {[Op.lte]:maxLat}  
             }
             if (minLng && !maxLng) {
                 whereClause['lng'] = {[Op.gte]:minLng} 
@@ -329,7 +372,7 @@ router.get("/", async (req, res) => {
             if (spotJson['price']) {
                 spotJson['price'] = parseFloat(spotJson['price'])
             };
-            if ( spotJson['preview'] === 0 || spotJson['preview'] === null ) {
+            if ( spotJson['preview'] === 0 ) {
                 spotJson['previewImage'] = "preview false"
             }
             if ( spotJson['previewImage'] === null ) {
@@ -339,11 +382,11 @@ router.get("/", async (req, res) => {
             spotList.push(spotJson)
         });
 
-        if (errorResult.errors.page || errorResult.errors.size || errorResult.errors.maxLat 
-            || errorResult.errors.minLat || errorResult.errors.maxLng || errorResult.errors.minLng
-            || errorResult.errors.minPrice || errorResult.errors.maxPrice ) {
-            return res.status(400).json(errorResult)
-        };
+        //if (errorResult.errors.page || errorResult.errors.size || errorResult.errors.maxLat 
+        //    || errorResult.errors.minLat || errorResult.errors.maxLng || errorResult.errors.minLng
+        //    || errorResult.errors.minPrice || errorResult.errors.maxPrice ) {
+        //    return res.status(400).json(errorResult)
+        //};
 
         return res.json({"Spots": spotList,"page":page,"size":size});
 
@@ -387,7 +430,7 @@ router.get("/", async (req, res) => {
             if (spotJson['price']) {
                 spotJson['price'] = parseFloat(spotJson['price'])
             };
-            if ( spotJson['preview'] === 0 || spotJson['preview'] === null ) {
+            if ( spotJson['preview'] === 0 ) {
                 spotJson['previewImage'] = "preview false"
             }
             if ( spotJson['previewImage'] === null ) {
