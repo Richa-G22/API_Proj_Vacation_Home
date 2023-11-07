@@ -540,9 +540,14 @@ router.get("/:spotId", async (req, res) => {
         if (spots['price']) {
             spots['price'] = parseFloat(spots['price'])
         };
+        console.log('-----------1--------------',spots['numReviews'])
         if (spots['numReviews']) {
             spots['numReviews'] = parseInt(spots['numReviews'])
+            console.log('-----------1--------------',spots['numReviews'])
+        } else {
+            spots['numReviews']  = 0
         };
+        
         if (spots['avgStarRating']) {
             spots['avgStarRating'] = parseFloat(spots['avgStarRating'])
         };
