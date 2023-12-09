@@ -1,9 +1,4 @@
 import Cookies from 'js-cookie';
-// const express = require("express");
-// const router = express.Router();
-// const apiRouter = require("./api");
-
-//router.use("/api", apiRouter);
 
 export async function csrfFetch(url, options = {}) {
   // set options.method to 'GET' if there is no method
@@ -34,8 +29,6 @@ export async function csrfFetch(url, options = {}) {
   // call this to get the "XSRF-TOKEN" cookie, should only be used in development
   
     export function restoreCSRF() {
-   //     if (process.env.NODE_ENV !== "production") {
             return csrfFetch('/api/csrf/restore');
     }
         
- // }
