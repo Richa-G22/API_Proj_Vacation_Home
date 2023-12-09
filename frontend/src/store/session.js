@@ -1,8 +1,10 @@
 import { csrfFetch } from './csrf';
 
+//action types
 const SET_USER = "session/setUser";
 const REMOVE_USER = "session/removeUser";
 
+//action creators
 const setUser = (user) => {
   return {
     type: SET_USER,
@@ -16,6 +18,7 @@ const removeUser = () => {
   };
 };
 
+//login thunk action
 export const login = (user) => async (dispatch) => {
   const { credential, password } = user;
   const response = await csrfFetch("/api/session", {
@@ -30,6 +33,7 @@ export const login = (user) => async (dispatch) => {
   return response;
 };
 
+//restoreUser thunk action to retain the logged in session user
 export const restoreUser = () => async (dispatch) => {
     const response = await csrfFetch("/api/session");
     const data = await response.json();
@@ -37,6 +41,7 @@ export const restoreUser = () => async (dispatch) => {
     return response;
 };
 
+//signup thunk action
 export const signup = (user) => async (dispatch) => {
     const { username, firstName, lastName, email, password } = user;
     const response = await csrfFetch("/api/users", {
@@ -54,8 +59,19 @@ export const signup = (user) => async (dispatch) => {
     return response;
 };
 
+//logout thunk action
+export const logout = () => async (dispatch) => {
+    const response = await csrfFetch('/api/session', {
+      method: 'DELETE'
+    });
+    dispatch(removeUser());
+    return response;
+  };
+
+//initialState should not have any logged in user  
 const initialState = { user: null };
 
+//session Reducer
 const sessionReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_USER:
