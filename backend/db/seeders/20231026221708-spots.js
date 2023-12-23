@@ -21,7 +21,7 @@ module.exports = {
       "lat": 37.7645358,
       "lng": -122.4730327,
       "name": "Plum House",
-      "description": "Lorem ipsum dolor sit amet. Ut iste sunt 33 dolore internos aut accusamus voluptas quo quod quod et aliquid debitis! Est asperiores animi quo ipsum temporibus ut debitis dolorum vel dignissimos facilis et rerum rerum. At enim deserunt eos unde fugit hic doloremque consectetur sed quia architecto ut aspernatur obcaecati id dicta perspiciatis.",
+      "description": "Lorem ipsum dolor sit amet.",
       "price": 123,
     },
     {
@@ -33,7 +33,7 @@ module.exports = {
       "lat": 57.7645358,
       "lng": -100.4730327,
       "name": "Cherry Hill Villa",
-      "description": "Lorem ipsum dolor sit amet. Ut iste sunt 33 dolore internos aut accusamus voluptas quo quod quod et aliquid debitis! Est asperiores animi quo ipsum temporibus ut debitis dolorum vel dignissimos facilis et rerum rerum. At enim deserunt eos unde fugit hic doloremque consectetur sed quia architecto ut aspernatur obcaecati id dicta perspiciatis.",
+      "description": "Lorem ipsum dolor sit amet.",
       "price": 289,
     },
     {
@@ -45,7 +45,7 @@ module.exports = {
       "lat": 20.7645358,
       "lng": -32.4730327,
       "name": "Sunbeam Manor",
-      "description": "Lorem ipsum dolor sit amet. Ut iste sunt 33 dolore internos aut accusamus voluptas quo quod quod et aliquid debitis! Est asperiores animi quo ipsum temporibus ut debitis dolorum vel dignissimos facilis et rerum rerum. At enim deserunt eos unde fugit hic doloremque consectetur sed quia architecto ut aspernatur obcaecati id dicta perspiciatis.",
+      "description": "Lorem ipsum dolor sit amet.",
       "price": 175,
     },
     {
@@ -57,7 +57,7 @@ module.exports = {
       "lat": 57.7645358,
       "lng": -100.4730327,
       "name": "Maple House",
-      "description": "Lorem ipsum dolor sit amet. Ut iste sunt 33 dolore internos aut accusamus voluptas quo quod quod et aliquid debitis! Est asperiores animi quo ipsum temporibus ut debitis dolorum vel dignissimos facilis et rerum rerum. At enim deserunt eos unde fugit hic doloremque consectetur sed quia architecto ut aspernatur obcaecati id dicta perspiciatis.",
+      "description": "Lorem ipsum dolor sit amet.",
       "price": 100,
     },
     {
@@ -69,7 +69,7 @@ module.exports = {
       "lat": 57.7645358,
       "lng": -100.4730327,
       "name": "Sugar Hill Villa",
-      "description": "Lorem ipsum dolor sit amet. Ut iste sunt 33 dolore internos aut accusamus voluptas quo quod quod et aliquid debitis! Est asperiores animi quo ipsum temporibus ut debitis dolorum vel dignissimos facilis et rerum rerum. At enim deserunt eos unde fugit hic doloremque consectetur sed quia architecto ut aspernatur obcaecati id dicta perspiciatis.",
+      "description": "Lorem ipsum dolor sit amet.",
       "price": 250,
     },
   ], { validate: true });
