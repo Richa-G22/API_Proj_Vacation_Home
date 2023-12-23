@@ -12,7 +12,7 @@ if (process.env.NODE_ENV === 'production') {
 module.exports = {
   async up (queryInterface, Sequelize) {
     await Review.bulkCreate([
-      {
+      /*{
         spotId: 1,
         userId: 1,
         review: 'Good. Could be better.',
@@ -35,7 +35,7 @@ module.exports = {
         userId: 3,
         review: 'A nice one',
         stars: 4,
-      },
+      },*/
     ], { validate: true });
   },
 

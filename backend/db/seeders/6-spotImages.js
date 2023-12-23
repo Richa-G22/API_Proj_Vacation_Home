@@ -27,7 +27,7 @@ module.exports = {
         url: 'https://www.pexels.com/photo/house-beside-trees-and-castle-1831545/',
         preview: true,
       },*/
-      {
+   /*   {
         spotId: 2,
         url: 'https://media.istockphoto.com/id/178988183/photo/house-in-bad-summer-thunderstorm.webp?b=1&s=170667a&w=0&k=20&c=GCKr4PR2gErNiBLYPnH75IbcHEl1PcCVbmoqRUfCAKs=',
         preview: true,
@@ -46,7 +46,7 @@ module.exports = {
         spotId: 5,
         url: 'https://media.istockphoto.com/id/1255835529/photo/modern-custom-suburban-home-exterior.webp?b=1&s=170667a&w=0&k=20&c=DB7ylL21zmnUqzO191HDQFVNasUcmOMDPXofCiHkz34=',
         preview: true,
-      }
+      }*/
     ], { validate: true });
   },
 

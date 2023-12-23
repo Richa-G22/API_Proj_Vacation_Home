@@ -12,7 +12,7 @@ if (process.env.NODE_ENV === 'production') {
 module.exports = {
   async up (queryInterface, Sequelize) {
     await ReviewImage.bulkCreate([
-      {
+    /*  {
         reviewId: 1,
         url: 'https://www.nytimes.com/wirecutter/reviews/best-instant-camera/',
       },
@@ -23,7 +23,7 @@ module.exports = {
       {
         reviewId: 3,
         url: 'https://www.nytimes.com/wirecutter/reviews/best-lego-sets-for-kids/',
-      }
+      }*/
     ], { validate: true });
   },
 

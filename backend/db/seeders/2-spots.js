@@ -12,7 +12,7 @@ if (process.env.NODE_ENV === 'production') {
 module.exports = {
   async up (queryInterface, Sequelize) {
     await Spot.bulkCreate ([
-    {
+   /* {
       "ownerId": 2,
       "address": "123 Disney Lane",
       "city": "San Francisco",
@@ -35,7 +35,7 @@ module.exports = {
       "name": "Cherry Hill Villa",
       "description": "Lorem ipsum dolor sit amet.",
       "price": 289,
-    },
+    },*/
     {
       "ownerId": 3,
       "address": "New Dover Lane",
@@ -48,7 +48,7 @@ module.exports = {
       "description": "Lorem ipsum dolor sit amet.",
       "price": 175,
     },
-    {
+    /*{
       "ownerId": 3,
       "address": "Maple Tree Lane",
       "city": "San Jose",
@@ -71,7 +71,7 @@ module.exports = {
       "name": "Sugar Hill Villa",
       "description": "Lorem ipsum dolor sit amet.",
       "price": 250,
-    },
+    },*/
   ], { validate: true });
 },
 
