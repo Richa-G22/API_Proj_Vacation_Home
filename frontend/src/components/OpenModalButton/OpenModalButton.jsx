@@ -14,7 +14,8 @@ function OpenModalButton({
     if (typeof onButtonClick === "function") onButtonClick();
   };
 
-  return <button onClick={onClick}>{buttonText}</button>;
+  return <button style={{backgroundColor: "grey", color: "white", 
+  boxShadow: "5px 5px 5px black", height: "30px", cursor: "pointer"}} onClick={onClick}>{buttonText}</button>;
 }
 
 export default OpenModalButton;

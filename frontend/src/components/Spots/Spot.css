@@ -1,0 +1,50 @@
+.spot-location-stars {
+    display: flex;
+    justify-content:space-between;
+    width: 93%
+}
+
+.grid {
+  display: grid;
+  grid: 500px / repeat(auto-fit, 400px);
+  max-width: 1600px;
+  margin: 10px auto;
+}
+
+.navlink-div {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-decoration: none;
+  color: black;
+  margin: 12px;
+}
+
+.image-div {
+  display: flex;
+  align-items: center;
+}
+
+.image {
+  border: 1px solid black;
+  height: 240px;
+  width: 350px; 
+  
+}
+
+.update-delete-button {
+  background-color: "grey"; 
+  color: "white";
+  box-shadow: "5px 5px 5px black";
+  height: "30px";
+  cursor: "pointer";
+}
+  
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 93%;
+  padding-top: 10px;
+}
+
+

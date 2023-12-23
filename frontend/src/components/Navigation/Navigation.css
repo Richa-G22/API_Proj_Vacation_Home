@@ -1,3 +1,53 @@
 .hidden {
     display: none;
 }
+
+.logo-div {
+    display: flex;
+    align-items: center;
+    padding-left: 20px; 
+    text-decoration: none;
+    font-family: Arial, Helvetica, sans-serif;
+    color:darkolivegreen;
+    font-size: 25px;
+    font-weight: bold;
+    
+}
+
+.nav-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    border-bottom: 2px solid rgb(230, 224, 224);
+    text-decoration: none;
+    
+  }
+
+.profile-menu-button{
+    display: flex;
+    border-radius: 15px;
+    width: 65px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+}
+
+.create-new-spot{
+    color: rgb(35, 35, 124);
+    font-size: 20px;   
+}
+
+.menu{
+    display: flex;
+}
+
+.logout-button {
+    border: 1px solid black;
+    border-radius: 50px;
+    font-size: 14px;
+    margin: 5px 0;
+    background-color: rgb(102, 100, 100);
+    cursor: pointer;
+    color: white;
+    padding: 7px;
+  }

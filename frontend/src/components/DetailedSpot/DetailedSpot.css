@@ -1,0 +1,106 @@
+.spot-detail-div {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-decoration: none;
+    color: black;
+    max-width: 1000px;
+    margin: auto;
+  }
+
+.spot-detail-preview-image {
+    display: block;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 700px;
+    height: 500px;
+    border-radius: 15px;
+  }
+
+  .spot-detail-image-div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .spot-detail-price-review-box {
+    border: 2px solid;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 15px;
+    padding: 20px;
+    width: 400px;
+    height: 70px;
+    justify-content: space-between;
+    
+  }
+
+  .spot-detail-info {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid;
+    padding-bottom: 10px;
+    margin: 10px 0;
+  }
+
+  .reserve-button {
+    border: 2px solid black;
+    background-color: rgb(245, 109, 109);
+    color: white;
+    width: 350px;
+    height: 50px;
+    font-size: 15px;
+    box-shadow: 5px 5px 5px black;
+  }
+
+  .spot-detail-price-review-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: space-between;
+    width: 100%
+  }
+
+  .spot-detail-price {
+    display: flex;
+    align-items: left;
+    justify-content: left;
+    width: 5%
+  }
+
+  .spot-detail-price-review {
+    display: flex;
+    flex-direction: row; 
+  }
+
+  .spot-detail-review {
+    margin: 25px 0;
+  }
+  
+  .spot-detail-review-firstName {
+    margin: 0;
+    margin-bottom: 3px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .spot-detail-review-month-year {
+    color: gray;
+    margin-bottom: 3px;
+  }
+  
+  .no-review-div {
+    margin: 10px 0;
+  }
+
+  .post-your-review-button {
+    color: white;
+    background-color: grey;
+    font-size: 14px;
+    border: 2px solid black;
+    cursor: pointer;
+  }
+
+  
+  

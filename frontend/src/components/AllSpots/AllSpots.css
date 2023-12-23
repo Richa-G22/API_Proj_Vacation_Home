@@ -1,0 +1,33 @@
+.spots-grid {
+    display: grid;
+    grid: 500px / repeat(auto-fit, 400px);
+    max-width: 1600px;
+    margin: 10px auto;
+  }
+  
+  .spot-div {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-decoration: none;
+    color: black;
+    margin: 12px;
+  }
+  
+  .spot-image-div {
+    display: flex;
+    align-items: center;
+    height: 280px;
+    
+  }
+  .spot-image {
+    border: 1px solid black;
+    width: 100%;
+    height: 250px;
+    border-radius: 15px;
+  }
+  
+  .city-state-stars {
+    display: flex;
+    justify-content: space-between;
+  }

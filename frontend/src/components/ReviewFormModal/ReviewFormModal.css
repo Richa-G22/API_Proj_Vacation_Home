@@ -1,0 +1,68 @@
+ .error {
+    color: red;
+    align-items:center;
+  }
+  
+  .review-modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300px;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  
+  .starcss {
+    float: left;
+    height: 46px;
+    padding: 0 10px;
+    /*content : '\2605'*/
+  }
+
+  .starcss:not(:checked) > input {
+    position: absolute;
+    top: -9999px; 
+  }
+
+  .starcss:not(:checked) > label {
+    float: right;
+    width: 1em;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+    font-size: 30px;
+    color: #ccc;
+  }
+
+  .starcss:not(:checked) > label:before {
+    content : '\2605'
+  }
+
+  .starcss> input:checked ~ label  {
+    color: black;
+  }
+
+  .starcss:not(:checked) > label:hover,
+  .starcss:not(:checked) > label:hover ~ label {
+    color: black;
+  } 
+  
+  .submit-review-btn {
+    border-radius: 4px;
+    font-size: 14px;
+    margin: 15px 5px;
+    width: 100%;
+    height: 40px;
+    background-color: rgb(247, 131, 110);
+    color: white;
+    cursor: pointer;
+    border: 2px solid black;
+    box-shadow: 4px 4px 4px black;;
+  }
+
+  .submit-review-btn:disabled {
+    background-color: #cccccc;
+    color: #666666;
+  }
