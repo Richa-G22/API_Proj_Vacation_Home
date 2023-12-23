@@ -59,12 +59,12 @@ const deleteSpot = (spotId) => {
     }
 };
 
-const addReview = (data) => {
+/*const addReview = (data) => {
     return {
         type: ADD_REVIEW_TO_SPOT,
         payload: data 
     }
-}
+}*/
 
 // Thunk Action Creator
 export const deleteSpotThunk = (spotId) => async (dispatch) => {

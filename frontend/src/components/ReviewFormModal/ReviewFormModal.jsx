@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getDetailSpot, addReviewToSpot } from "../../store/spots";
+import { addReviewToSpot } from "../../store/spots";
 import { useModal } from "../../context/Modal";
 import "./ReviewFormModal.css";
 
 const ReviewFormModal = ({ spotId }) => {
-    const sessionUser = useSelector((state) => state.session.user);
+    //const sessionUser = useSelector((state) => state.session.user);
     const [review, setReview] = useState("");
     const [stars, setStars] = useState(0);
     const [error, setError] = useState("");
