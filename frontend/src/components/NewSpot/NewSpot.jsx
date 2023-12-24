@@ -22,89 +22,158 @@ const NewSpot = () => {
   const [image3, setImage3] = useState("");
   const [image4, setImage4] = useState("");
   const [errors, setErrors] = useState({});
+  let foundError = false;
+  //let errors = {};
 
   const validate = () => {
+    foundError = false;
     setErrors({});
     console.log('.......inside validate........')
 
-    if (!country) 
+    if (!country) {
+      foundError = true;
       setErrors((errors) => ({ ...errors, country: "Country is required" }));
       console.log('...........inside country loop...........')
       console.log('........country.....', country);
+    }
 
-    if (!address)
+    if (!address) {
+      foundError = true;
       setErrors((errors) => ({ ...errors, address: "Address is required" }));
       console.log('...........inside address loop...........')
       console.log('........address.....', address);
+    }
 
-    if (!city) 
+    if (!city)  {
+      foundError = true;
       setErrors((errors) => ({ ...errors, city: "City is required" }));
+    }
 
-    if (!state)
+    if (!state) {
+      foundError = true;
       setErrors((errors) => ({ ...errors, state: "State is required" }));
+    }
 
-    if (!lat)
+    if (!lat) {
+      foundError = true;
       setErrors((errors) => ({ ...errors, lat: "Latitude is required" }));
+    }
 
-    if (!lng)
+    if (!lng) {
+      foundError = true;
       setErrors((errors) => ({ ...errors, lng: "Longitude is required" }));
+    }
 
-    if (!description || description.length < 30)
+    if (!description || description.length < 30) {
+      foundError = true;
       setErrors((errors) => ({ ...errors,description: "Description needs a minimum of 30 characters"}));
+    }
 
-    if (!name) 
+    if (!name)  {
+      foundError = true;
       setErrors((errors) => ({ ...errors, name: "Name is required" }));
+    }
 
-    if (!price)
+    if (!price) {
+      foundError = true;
       setErrors((errors) => ({ ...errors, price: "Price is required" }));
+    }
 
-    if (!previewImage)
-    {console.log('........inside  previewImge looop......')
-      setErrors((errors) => ({ ...errors, previewImage: "Preview Image is required" }));
+    if (!previewImage) {
+      foundError = true;
+      setErrors((errors) => ({ ...errors, previewImage: "preview image is required" }));
     }
     else if (
-      !previewImage.endsWith(".png") && 
-      !previewImage.endsWith(".jpg") && 
-      !previewImage.endsWith(".jpeg")
+      previewImage.indexOf(".png") == -1 && 
+      previewImage.indexOf(".jpg") == -1 && 
+      previewImage.indexOf(".jpeg") == -1
     ) {
+      foundError = true;
       setErrors((errors) => ({ ...errors, previewImage: "Image URL must end in .png, .jpg, or .jpeg"}));
     }
 
     if (
         image1 && (
-        !image1.endsWith(".png") && 
-        !image1.endsWith(".jpg") && 
-        !image1.endsWith(".jpeg") )
+        image1.indexOf(".png") == -1 && 
+        image1.indexOf(".jpg") == -1 && 
+        image1.indexOf(".jpeg")== -1  )
     ) {
-        setErrors((errors) => ({ ...errors, image1: "Image URL must end in .png, .jpg, or .jpeg"}));
+      foundError = true;
+      setErrors((errors) => ({ ...errors, image1: "Image URL must end in .png, .jpg, or .jpeg"}));
     }
-  
     if (
         image2 && (
-        !image2.endsWith(".png") && 
-        !image2.endsWith(".jpg") && 
-        !image2.endsWith(".jpeg") )
+        image2.indexOf(".png") == -1 && 
+        image2.indexOf(".jpg") == -1 && 
+        image2.indexOf(".jpeg")== -1  )
     ) {
-        setErrors((errors) => ({ ...errors, image2: "Image URL must end in .png, .jpg, or .jpeg"}));
+      foundError = true;
+      setErrors((errors) => ({ ...errors, image2: "Image URL must end in .png, .jpg, or .jpeg"}));
     }
-  
     if (
         image3 && (
-        !image3.endsWith(".png") && 
-        !image3.endsWith(".jpg") && 
-        !image3.endsWith(".jpeg") )
+        image3.indexOf(".png") == -1 && 
+        image3.indexOf(".jpg") == -1 && 
+        image3.indexOf(".jpeg")== -1  )
     ) {
-        setErrors((errors) => ({...errors, image3: "Image URL must end in .png, .jpg, or .jpeg"}));
+      foundError = true;
+      setErrors((errors) => ({ ...errors, image3: "Image URL must end in .png, .jpg, or .jpeg"}));
     }
-  
     if (
         image4 && (
-        !image4.endsWith(".png") && 
-        !image4.endsWith(".jpg") &&
-        !image4.endsWith(".jpeg"))
+        image4.indexOf(".png") == -1 && 
+        image4.indexOf(".jpg") == -1 && 
+        image4.indexOf(".jpeg")== -1  )
     ) {
-        setErrors((errors) => ({...errors, image4: "Image URL must end in .png, .jpg, or .jpeg"}));
+      foundError = true;
+      setErrors((errors) => ({ ...errors, image4: "Image URL must end in .png, .jpg, or .jpeg"}));
     }
+
+    //if (!previewImage)
+    //  setErrors((errors) => ({ ...errors, previewImage: "preview image is required" }));
+    //else if (
+    //  !previewImage.endsWith(".png") && 
+    //  !previewImage.endsWith(".jpg") && 
+    //  !previewImage.endsWith(".jpeg")
+    //) {
+    //  setErrors((errors) => ({ ...errors, previewImage: "Image URL must end in .png, .jpg, or .jpeg"}));
+    //}
+
+    //if (
+    //    image1 && (
+    //    !image1.endsWith(".png") && 
+    //    !image1.endsWith(".jpg") && 
+    //    !image1.endsWith(".jpeg") )
+    //) {
+    //    setErrors((errors) => ({ ...errors, image1: "Image URL must end in .png, .jpg, or .jpeg"}));
+    //}
+  
+    //if (
+    //    image2 && (
+    //    !image2.endsWith(".png") && 
+    //    !image2.endsWith(".jpg") && 
+    //    !image2.endsWith(".jpeg") )
+    //) {
+    //    setErrors((errors) => ({ ...errors, image2: "Image URL must end in .png, .jpg, or .jpeg"}));
+    //}
+  
+    //if (
+    //    image3 && (
+    //    !image3.endsWith(".png") && 
+    //    !image3.endsWith(".jpg") && 
+    //    !image3.endsWith(".jpeg") )
+    //) {
+    //    setErrors((errors) => ({...errors, image3: "Image URL must end in .png, .jpg, or .jpeg"}));
+    //}
+  
+    //if (
+    //    image4 && (
+    //    !image4.endsWith(".png") && 
+    //    !image4.endsWith(".jpg") &&
+    //    !image4.endsWith(".jpeg"))
+    //) {
+    //    setErrors((errors) => ({...errors, image4: "Image URL must end in .png, .jpg, or .jpeg"}));
+    //}
   };
 
   const handleSubmit = async (e) => {
@@ -117,7 +186,8 @@ const NewSpot = () => {
     console.log('.........found errors............', errors);
     //setErrors({});
 
-    if (JSON.stringify(errors) === '{}') {
+    //if (JSON.stringify(errors) === '{}') {
+    if ( !foundError) {
         const newSpot =  await dispatch(
             createNewSpot({
                 country,
@@ -134,7 +204,7 @@ const NewSpot = () => {
             const data = await res.json();
             console.log('......data.......',data)
             console.log('.....errors.....', errors)
-            console.log('..........newSpot.........', newSpot);
+            //console.log('..........newSpot.........', newSpot);
             
             if (data && data.errors) {
                 setErrors((errors) => ({ ...errors, ...data.errors }));
@@ -145,7 +215,8 @@ const NewSpot = () => {
         if (newSpot && newSpot.id) 
         {
                     dispatch(addImageToSpot(newSpot.id, { url: previewImage, preview: true })
-                ); 
+                );
+                console.log('......returned from addImageTo Spot ') 
 
                 if (image1) {
                     dispatch(addImageToSpot(newSpot.id, { url: image1, preview: false }));

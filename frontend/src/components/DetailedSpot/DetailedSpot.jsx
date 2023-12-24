@@ -54,6 +54,7 @@ const Spot = () => {
 
       console.log('........Reviews.....', Reviews)
       console.log('........rev.....', rev)
+      console.log('.... type of average rating.....', typeof(avgStarRating))
 
       const previewImage = SpotImages.find((img) => img.preview === true);
       if (!previewImage) { 
@@ -87,7 +88,7 @@ const Spot = () => {
                         </div>
                         <div >
                             <i className="fa-solid fa-star"></i>&nbsp;
-                            <span style={{ fontWeight: "bold" }}>{avgStarRating > 0 ? avgStarRating.toFixed(1) : "New"}
+                            <span style={{ fontWeight: "bold" }}>{parseFloat(avgStarRating) > 0 ? parseFloat(avgStarRating).toFixed(1) : "New"}
                             </span>  
                             {numReviews ? (
                             <>
@@ -110,7 +111,7 @@ const Spot = () => {
             <div className="spot-detail-price-review">
             <div>
                 <i className="fa-solid fa-star"></i>&nbsp;
-                <span style={{ fontWeight: "bold" }}>{avgStarRating > 0 ? avgStarRating.toFixed(1) : "New"}
+                <span style={{ fontWeight: "bold" }}>{parseFloat(avgStarRating) > 0 ? parseFloat(avgStarRating).toFixed(1) : "New"}
                 </span>  
                 {numReviews ? (
                 <>
