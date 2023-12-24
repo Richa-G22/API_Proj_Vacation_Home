@@ -88,9 +88,10 @@ const Spot = () => {
                         </div>
                         <div >
                             <i className="fa-solid fa-star"></i>&nbsp;
-                            <span style={{ fontWeight: "bold" }}>{parseFloat(avgStarRating) > 0 ? parseFloat(avgStarRating).toFixed(1) : "New"}
+                            <span style={{ fontWeight: "bold" }}>
+                                {parseFloat(avgStarRating) > 0 ? parseFloat(avgStarRating).toFixed(1) : "New"}
                             </span>  
-                            {numReviews ? (
+                            {parseFloat(numReviews) ? (
                             <>
                                 {numReviews > 0 ? " . "  : "  "}
                                 {numReviews}{numReviews > 1 ?  " reviews" :  " review"}
@@ -113,7 +114,7 @@ const Spot = () => {
                 <i className="fa-solid fa-star"></i>&nbsp;
                 <span style={{ fontWeight: "bold" }}>{parseFloat(avgStarRating) > 0 ? parseFloat(avgStarRating).toFixed(1) : "New"}
                 </span>  
-                {numReviews ? (
+                {parseFloat(numReviews) ? (
                 <>
                     {numReviews > 0 ? " . "  : "  "}
                     {numReviews}{numReviews > 1 ?  " reviews" :  " review"}

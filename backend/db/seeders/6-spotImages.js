@@ -14,39 +14,54 @@ module.exports = {
     await SpotImage.bulkCreate([
       {
         spotId: 1,
-        url: 'https://media.istockphoto.com/id/479767332/photo/idyllic-home-with-covered-porch.webp?b=1&s=170667a&w=0&k=20&c=8WsZVz6uBs31BhBJ0xzTFgbBixVyG0biRGftge7nfe4=',
+        url: 'https://cdn.pixabay.com/photo/2012/09/21/17/51/house-57463_1280.jpg',
         preview: true,
       },
-    /*  {
-        spotId: 1,
-        url: 'https://www.pexels.com/photo/house-beside-trees-and-castle-1831545/',
+      {
+        spotId: 2,
+        url: 'https://cdn.pixabay.com/photo/2017/03/10/11/20/mill-2132494_1280.jpg',
         preview: false,
       },
       {
-        spotId: 1,
-        url: 'https://www.pexels.com/photo/house-beside-trees-and-castle-1831545/',
-        preview: true,
-      },*/
-   /*   {
-        spotId: 2,
-        url: 'https://media.istockphoto.com/id/178988183/photo/house-in-bad-summer-thunderstorm.webp?b=1&s=170667a&w=0&k=20&c=GCKr4PR2gErNiBLYPnH75IbcHEl1PcCVbmoqRUfCAKs=',
-        preview: true,
-      },
-      {
         spotId: 3,
-        url: 'https://media.istockphoto.com/id/1269776313/photo/suburban-house.webp?b=1&s=170667a&w=0&k=20&c=US41XP4y05JtczMaJWEk1RE4gsrxGdOYEbIh2qr5lw4=',
+        url: 'https://cdn.pixabay.com/photo/2013/10/09/02/27/lake-192990_1280.jpg',
         preview: true,
       },
       {
         spotId: 4,
-        url: 'https://media.istockphoto.com/id/1026205392/photo/beautiful-luxury-home-exterior-at-twilight.webp?b=1&s=170667a&w=0&k=20&c=-PZY6ObjW0B-GN0Tgm6gaYKhwYP_KtAgSlGwsTzYUlQ=',
+        url: 'https://cdn.pixabay.com/photo/2016/06/24/10/47/house-1477041_1280.jpg',
         preview: true,
       },
       {
         spotId: 5,
-        url: 'https://media.istockphoto.com/id/1255835529/photo/modern-custom-suburban-home-exterior.webp?b=1&s=170667a&w=0&k=20&c=DB7ylL21zmnUqzO191HDQFVNasUcmOMDPXofCiHkz34=',
+        url: 'https://cdn.pixabay.com/photo/2022/12/21/09/39/winter-7669652_1280.jpg',
         preview: true,
-      }*/
+      },
+      {
+        spotId: 6,
+        url: 'https://cdn.pixabay.com/photo/2017/05/30/13/01/relax-2356858_1280.jpg',
+        preview: true,
+      },
+      {
+        spotId: 7,
+        url: 'https://cdn.pixabay.com/photo/2021/12/11/11/48/nature-6862612_1280.jpg',
+        preview: true,
+      },
+      {
+        spotId: 8,
+        url: 'https://cdn.pixabay.com/photo/2014/07/10/17/18/large-home-389271_1280.jpg',
+        preview: true,
+      },
+      {
+        spotId: 9,
+        url: 'https://cdn.pixabay.com/photo/2016/08/28/16/43/stilt-house-1626354_1280.jpg',
+        preview: true,
+      },
+      {
+        spotId: 10,
+        url: 'https://cdn.pixabay.com/photo/2020/10/13/13/28/ameland-5651866_1280.jpg',
+        preview: true,
+      }
     ], { validate: true });
   },
 

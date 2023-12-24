@@ -12,8 +12,8 @@ if (process.env.NODE_ENV === 'production') {
 module.exports = {
   async up (queryInterface, Sequelize) {
     await Spot.bulkCreate ([
-   /* {
-      "ownerId": 2,
+    {
+      "ownerId": 1,
       "address": "123 Disney Lane",
       "city": "San Francisco",
       "state": "California",
@@ -35,7 +35,7 @@ module.exports = {
       "name": "Cherry Hill Villa",
       "description": "Lorem ipsum dolor sit amet.",
       "price": 289,
-    },*/
+    },
     {
       "ownerId": 3,
       "address": "New Dover Lane",
@@ -48,8 +48,8 @@ module.exports = {
       "description": "Lorem ipsum dolor sit amet.",
       "price": 175,
     },
-    /*{
-      "ownerId": 3,
+    {
+      "ownerId": 1,
       "address": "Maple Tree Lane",
       "city": "San Jose",
       "state": "California",
@@ -61,7 +61,7 @@ module.exports = {
       "price": 100,
     },
     {
-      "ownerId": 3,
+      "ownerId": 2,
       "address": "Sugar Hill Lane",
       "city": "Concord",
       "state": "New Hampshire",
@@ -71,7 +71,67 @@ module.exports = {
       "name": "Sugar Hill Villa",
       "description": "Lorem ipsum dolor sit amet.",
       "price": 250,
-    },*/
+    },
+    {
+      "ownerId": 4,
+      "address": "Aspen Lane",
+      "city": "Aspen City",
+      "state": "Colorado",
+      "country": "United States of America",
+      "lat": 37.7645358,
+      "lng": -122.4730327,
+      "name": "Aspen House",
+      "description": "Lorem ipsum dolor sit amet.",
+      "price": 123,
+    },
+    {
+      "ownerId": 4,
+      "address": "Mountain Dr",
+      "city": "Mountain City",
+      "state": "Arizona",
+      "country": "United States of America",
+      "lat": 57.7645358,
+      "lng": -100.4730327,
+      "name": "Mountain Villa",
+      "description": "Lorem ipsum dolor sit amet.",
+      "price": 289,
+    },
+    {
+      "ownerId": 5,
+      "address": "Peach Lane",
+      "city": "Peach City",
+      "state": "Michigan",
+      "country": "United States of America",
+      "lat": 20.7645358,
+      "lng": -32.4730327,
+      "name": "Sunbeam Manor",
+      "description": "Lorem ipsum dolor sit amet.",
+      "price": 175,
+    },
+    {
+      "ownerId": 2,
+      "address": "Maple Tree Lane",
+      "city": "San Jose",
+      "state": "California",
+      "country": "United States of America",
+      "lat": 57.7645358,
+      "lng": -100.4730327,
+      "name": "Maple House",
+      "description": "Lorem ipsum dolor sit amet.",
+      "price": 100,
+    },
+    {
+      "ownerId": 1,
+      "address": "River Lane",
+      "city": "Concord",
+      "state": "Maine",
+      "country": "United States of America",
+      "lat": 57.7645358,
+      "lng": -100.4730327,
+      "name": "Sugar Hill Villa",
+      "description": "Lorem ipsum dolor sit amet.",
+      "price": 250,
+    },
   ], { validate: true });
 },
 
